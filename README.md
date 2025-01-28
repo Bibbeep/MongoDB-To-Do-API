@@ -39,7 +39,7 @@ To get started with the MongoDB To-Do API, follow these steps:
     ```
 
 5. **Access the API:**
-  You can now access the API on localhost:3000. Open your browser or API client and navigate to the endpoints.
+  You can now access the API at http://localhost:3000 . Open your browser or API client and navigate to the endpoints.
 
 ### Features:
 

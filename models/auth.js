@@ -21,11 +21,14 @@ class Auth {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
+        const now = new Date(Date.now());
 
         const returnData = await db.collection('user').insertOne({
             email,
             password: hashedPassword,
             fullName,
+            createdAt: now,
+            updatedAt: now,
         });
 
         return returnData;
