@@ -28,14 +28,14 @@ To get started with the MongoDB To-Do API, follow these steps:
 
     ```env
     PORT=3000
-    MONGODB_URI=mongodb://localhost:27017/todo
+    MONGODB_URI=mongodb://localhost:27017
     JWT_SECRET=your_jwt_secret
     REDIS_URL=redis://localhost:6379
     ```
 
 4. **Run the application:**
     ```bash
-    npm start dev
+    npm run dev
     ```
 
 5. **Access the API:**
@@ -73,9 +73,9 @@ To get started with the MongoDB To-Do API, follow these steps:
   curl -X POST http://localhost:3000/api/v1/auth/register \
     -H "Content-Type: application/json" \
     -d '{
-        "email": "test@mail.com",
-        "fullName": "Test User",
-        "password": "passphrase123"
+      "email": "test@mail.com",
+      "fullName": "Test User",
+      "password": "passphrase123"
     }'
   ```
   - Response (201):
@@ -85,11 +85,9 @@ To get started with the MongoDB To-Do API, follow these steps:
     "status": "success",
     "message": "Successfully registered a new account.",
     "data": {
-        "user": {
-        "id": "64c77b5f9f1c4f4e8c7b92b1",
-        "email": "test@mail.com",
-        "fullName": "Test User"
-        }
+      "user": {
+        "id": "64c77b5f9f1c4f4e8c7b92b1"
+      }
     }
   }
   ```
