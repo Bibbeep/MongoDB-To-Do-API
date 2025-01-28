@@ -1,3 +1,4 @@
+const { JsonWebTokenError } = require('jsonwebtoken');
 const APIError = require('./error');
 const Joi = require('joi');
 
@@ -7,6 +8,11 @@ module.exports = (err, req, res, next) => {
             status: 'fail',
             message: 'Validation error!',
             errors: err.details,
+        });
+    } else if (err instanceof JsonWebTokenError) {
+        return res.status(401).json({
+            status: 'fail',
+            message: 'Invalid or expired token!',
         });
     } else if (err instanceof APIError) {
         return res.status(err.statusCode).json({
