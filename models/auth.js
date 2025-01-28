@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const APIError = require('../utils/error');
 const { connectToDB } = require('../configs/mongodb');
+const JWT_SECRET = process.env.JWT_SECRET;
 
 class Auth {
     static async createUser(data) {
@@ -26,6 +28,37 @@ class Auth {
         });
 
         return returnData;
+    }
+
+    static async login(data) {
+        const {
+            email,
+            password,
+        } = data;
+
+        const db = await connectToDB();
+        const user = await db.collection('user').findOne({ email });
+
+        if (!user || !(await bcrypt.compare(password, user.password))) {
+            throw new APIError(401, 'Email or password is incorrect!');
+        }
+
+        const accessToken = jwt.sign(
+            {
+                id: user._id.toString(),
+                fullName: user.fullName,
+            },
+            JWT_SECRET,
+            { expiresIn: '7d' }
+        );
+
+        return {
+            user: {
+                id: user._id.toString(),
+                fullName: user.fullName,
+            },
+            accessToken,
+        };
     }
 }
 
