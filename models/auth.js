@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const APIError = require('../utils/error');
 const { connectToDB } = require('../configs/mongodb');
+const { getClient } = require('../configs/redis');
 const JWT_SECRET = process.env.JWT_SECRET;
 
 class Auth {
@@ -59,6 +60,25 @@ class Auth {
             },
             accessToken,
         };
+    }
+
+    static async logout(data) {
+        const {
+            userId,
+            tokenExp,
+            token,
+        } = data;
+
+        const ttl = tokenExp - Math.floor(Date.now() / 1000);
+        const now = new Date(Date.now());
+        const nowString = `${now.toLocaleDateString()} ${now.toTimeString()}`;
+
+        const redis = await getClient();
+        redis.setEx(
+            `blacklist_${token}`,
+            ttl,
+            `userId ${userId} logged out at ${nowString}`,
+        );
     }
 }
 
