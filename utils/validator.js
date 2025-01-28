@@ -12,6 +12,12 @@ const registerSchema = Joi.object({
     fullName: Joi.string().required(),
 });
 
+const loginSchema = Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().min(8).max(50).required(),
+});
+
 module.exports = {
     validateRegister: validator(registerSchema),
+    validateLogin: validator(loginSchema),
 };
