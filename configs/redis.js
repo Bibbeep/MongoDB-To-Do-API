@@ -20,5 +20,11 @@ client.on('error', (err) => {
 });
 
 module.exports = {
-    redisClient: client,
+    getClient: async () => {
+        if (!client.isOpen) {
+            await client.connect();
+        }
+
+        return client;
+    },
 };
