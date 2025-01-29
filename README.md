@@ -1,4 +1,4 @@
-# MongoDB To-Do API
+# MongoDB To-Do API 📝
 
 A simple to-do list to help user organizes their tasks!
 

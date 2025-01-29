@@ -24,7 +24,7 @@ module.exports = {
 				throw error;
 			}
 
-			const todo = await Todo.createTodo({ userId: req.userId, value });
+			const todo = await Todo.create({ userId: req.userId, value });
 
 			return res.status(201).json({
 				status: 'success',
@@ -48,7 +48,12 @@ module.exports = {
 	},
 	deleteTodoById: async (req, res, next) => {
 		try {
-			
+			await Todo.delete({ userId: req.userId, todoId: req.params.id });
+
+			return res.status(200).json({
+				status: 'success',
+				message: 'Successfully deleted a task.'
+			});
 		} catch (err) {
 			next(err);
 		}

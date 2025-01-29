@@ -1,7 +1,7 @@
-const APIError = require("../utils/error");
+const APIError = require('../utils/error');
 
 module.exports = {
-    authorizeUserId: async (req, res, next) => {
+    authorizeUserIdQueryParam: async (req, res, next) => {
         try {
             const userId = req.query.userId || null;
 
