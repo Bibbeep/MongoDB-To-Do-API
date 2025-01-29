@@ -256,18 +256,16 @@ To get started with the MongoDB To-Do API, follow these steps:
     -H "Content-Type: application/json" \
     -d '{
       "title": "Take MongoDB Associate Developer Exam",
-      "note": "﻿https://learn.mongodb.com/learn/course/mongodb-associate-developer-exam-nodejs",
+      "note": "https://learn.mongodb.com/learn/course/mongodb-associate-developer-exam-nodejs",
+      "onDate": "2025-01-31T06:00:00.000Z",
       "dueDate": "2025-01-31T08:00:00.000Z",
       "subTodos": [
         {
           "title": "Purchase the exam",
-          "note": "Use this voucher to get 100% discount: AHS3213S321321AD",
-          "dueDate": null
+          "note": "Use this voucher to get 100% discount: AHS3213S321321AD"
         },
         {
-          "title": "Take the exam practice",
-          "note": null,
-          "dueDate": null
+          "title": "Take the exam practice"
         }
       ]
     }'
@@ -280,37 +278,8 @@ To get started with the MongoDB To-Do API, follow these steps:
     "status": "success",
     "message": "Successfully added a new task.",
     "data": {
-      "task": {
-        "id": "64c77b5f9f1c4f4e8c5b98255",
-        "title": "Take MongoDB Associate Developer Exam",
-        "note": "﻿https://learn.mongodb.com/learn/course/mongodb-associate-developer-exam-nodejs",
-        "dueDate": "2025-01-31T08:00:00.000Z",
-        "isDone": false,
-        "doneAt": null,
-        "createdAt": "2025-01-26T18:21:00.009Z",
-        "updatedAt": "2025-01-26T18:22:00.009Z",
-        "subTodos": [
-          {
-            "id": "64c77b5f9f1c4f4e8c5b98256",
-            "title": "Purchase the exam",
-            "note": "Use this voucher to get 100% discount: AHS3213S321321AD",
-            "dueDate": null,
-            "isDone": false,
-            "doneAt": null,
-            "createdAt": "2025-01-26T18:21:30.009Z",
-            "updatedAt": "2025-01-26T18:21:30.009Z",
-          },
-          {
-            "id": "64c77b5f9f1c4f4e8c5b98257",
-            "title": "Take the exam practice",
-            "note": null,
-            "dueDate": null,
-            "isDone": false,
-            "doneAt": null,
-            "createdAt": "2025-01-26T18:22:00.009Z",
-            "updatedAt": "2025-01-26T18:22:00.009Z",
-          }
-        ]
+      "todo": {
+        "id": "64c77b5f9f1c4f4e8c5b98255"
       }
     }
   }
@@ -322,7 +291,7 @@ To get started with the MongoDB To-Do API, follow these steps:
   - Request
 
   ```bash
-  curl -X PATCH http://localhost:3000/api/todos/64c77b5f9f1c4f4e8c5b98255&includeSubTodos=true \
+  curl -X PATCH http://localhost:3000/api/todos/64c77b5f9f1c4f4e8c5b98255?includeSubTodos=true \
     -H "Authorization: Bearer $JWT_TOKEN" \
     -H "Content-Type: application/json" \
     -d '{ "dueDate": "2025-02-02T06:00:00.000Z" }'
@@ -335,38 +304,9 @@ To get started with the MongoDB To-Do API, follow these steps:
     "status": "success",
     "message": "Successfully edited a task.",
     "data": {
-      "task": {
-        "id": "64c77b5f9f1c4f4e8c5b98255",
-        "title": "Take MongoDB Associate Developer Exam",
-        "note": "﻿https://learn.mongodb.com/learn/course/mongodb-associate-developer-exam-nodejs",
-        "dueDate": "2025-02-02T06:00:00.000Z",
-        "isDone": false,
-        "doneAt": null,
-        "createdAt": "2025-01-26T18:21:00.009Z",
-        "updatedAt": "2025-01-27T10:00:00.000Z",
-        "subTodos": [
-          {
-            "id": "64c77b5f9f1c4f4e8c5b98256",
-            "title": "Purchase the exam",
-            "note": "Use this voucher to get 100% discount: AHS3213S321321AD",
-            "dueDate": null,
-            "isDone": false,
-            "doneAt": null,
-            "createdAt": "2025-01-26T18:21:30.009Z",
-            "updatedAt": "2025-01-26T18:21:30.009Z",
-          },
-          {
-            "id": "64c77b5f9f1c4f4e8c5b98257",
-            "title": "Take the exam practice",
-            "note": null,
-            "dueDate": null,
-            "isDone": false,
-            "doneAt": null,
-            "createdAt": "2025-01-26T18:22:00.009Z",
-            "updatedAt": "2025-01-26T18:22:00.009Z",
-          }
-        ]
-      }
+      "todo": {
+        "id": "64c77b5f9f1c4f4e8c5b98255"
+      } 
     }
   }
   ```
