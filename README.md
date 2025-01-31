@@ -171,7 +171,6 @@ To get started with the MongoDB To-Do API, follow these steps:
           "updatedAt": "2025-01-26T21:21:00.000Z",
           "subTodos": [
             {
-              "id": "64c77b5f9f1c4f4e8c7b93b2",
               "title": "Setup the project",
               "note": null,
               "dueDate": "2025-01-27T20:00:00.000Z",
@@ -184,20 +183,20 @@ To get started with the MongoDB To-Do API, follow these steps:
           ]
         },
         ...
-      ]
-    },
-    "meta": {
-      "pagination": {
-        "current_page": 2,
-        "links": {
+      ],
+      "meta": {
+        "pagination": {
+          "currentPage": 2,
+          "links": {
             "next": "/api/v1/todos?userId=64c77b5f9f1c4f4e8c7b92b1&page=3&count=10",
             "prev": "/api/v1/todos?userId=64c77b5f9f1c4f4e8c7b92b1&page=1&count=10"
-        },
-        "per_page": 10,
-        "total": 31,
-        "total_pages": 4
+          },
+          "perPage": 10,
+          "total": 31,
+          "totalPages": 4
+        }
       }
-    }
+    },
   }
   ```
 ---

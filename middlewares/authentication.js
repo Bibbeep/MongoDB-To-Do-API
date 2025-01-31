@@ -6,6 +6,10 @@ const JWT_SECRET = process.env.JWT_SECRET;
 module.exports = {
     verifyToken: async (req, res, next) => {
         try {
+            if (!req.headers.authorization?.startsWith('Bearer')) {
+                throw new APIError(401, 'Invalid or expired token!');
+            }
+
             const token = req.headers.authorization.split(' ')[1];
 
             const redis = await getClient();

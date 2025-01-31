@@ -125,6 +125,167 @@ class Todo {
 
         return updatedTodo;
     }
+
+    static async getById(data) {
+        const {
+            userId,
+            includeSubTodos,
+            todoId,
+        } = data;
+
+        const isIncludeSubTodos = includeSubTodos ? (includeSubTodos === 'true') : true;
+        const projection = isIncludeSubTodos ? undefined : { subTodos: isIncludeSubTodos };
+
+        const db = await connectToDB();
+        const todo = await db.collection('todo').findOne(
+            { _id: ObjectId.createFromHexString(todoId) },
+            { projection },
+        );
+
+        if (!todo) {
+            throw new APIError(404, 'Todo does not exist!');
+        } else if (todo.userId.toString() !== userId) {
+            throw new APIError(403, 'Unauthorized! Cannot access other user\'s todo.');
+        }
+
+        const returnData = {
+            id: todo._id.toString(),
+            title: todo.title,
+            note: todo.note,
+            onDate: todo.onDate,
+            dueDate: todo.dueDate,
+            isDone: todo.isDone,
+            doneAt: todo.doneAt,
+            createdAt: todo.createdAt,
+            updatedAt: todo.updatedAt,
+            subTodos: todo.subTodos || null,
+        };
+
+        if (!returnData.subTodos) {
+            delete returnData.subTodos;
+        }
+
+        return returnData;
+    }
+
+    static async getAll(data) {
+        const {
+            userId,
+            value,
+        } = data;
+
+        const {
+            userId: userIdParam,
+            date,
+            sortBy = 'date',
+            page = 1,
+            count = 10,
+            includeSubTodos,
+        } = value;
+        
+        if (userId !== userIdParam) {
+            throw new APIError(403, 'Unauthorized! Cannot access other user\'s todo.');
+        }
+
+        // Filter
+        const filters = { userId: ObjectId.createFromHexString(userIdParam) };
+
+        if (date) {
+            filters.onDate = date;
+        }
+
+        // Sorting
+        const sortDate = sortBy === '-date' ? -1 : 1;
+
+        // Pagination
+        const skip = parseInt(count) * (parseInt(page) - 1);
+        const limit = parseInt(count);
+
+        // Projection
+        const isIncludeSubTodos = includeSubTodos ? (includeSubTodos === 'true') : true;
+        const projection = isIncludeSubTodos ? undefined : { subTodos: isIncludeSubTodos };
+
+        const db = await connectToDB();
+        const todos = await db.collection('todo').aggregate([
+            {
+                $match: filters,
+            },
+            {
+                $sort: {
+                    onDate: sortDate,
+                },
+            },
+            {
+                $facet: {
+                    metadata: [{ $count: 'totalCount' }],
+                    data:
+                    [
+                        ...(projection ? [{ $project: projection }] : []),
+                        { $skip: skip },
+                        { $limit: limit},
+                    ],
+                }
+            },
+        ]).toArray();
+
+        const todoData = todos[0].data.map((todo) => {
+            const data = {
+                id: todo._id.toString(),
+                title: todo.title,
+                note: todo.note,
+                onDate: todo.onDate,
+                dueDate: todo.dueDate,
+                isDone: todo.isDone,
+                doneAt: todo.doneAt,
+                createdAt: todo.createdAt,
+                updatedAt: todo.updatedAt,
+                subTodos: todo.subTodos || null,
+            };
+
+            if (!data.subTodos) {
+                delete data.subTodos;
+            }
+
+            return data;
+        });
+
+        if (!todos[0].data.length) {
+            todos[0].metadata.push({ totalCount: 0 });
+        }
+
+        const total = todos[0].metadata[0].totalCount;
+        const totalPages = Math.ceil(todos[0].metadata[0].totalCount / limit);
+        
+        const next = ((parseInt(page) < totalPages) && (parseInt(page) >= 1)) ?
+            `/api/v1/todos?userId=${userIdParam}&page=${parseInt(page) + 1}&count=${limit}&includeSubTodos=${isIncludeSubTodos}&sortBy=${sortBy}` :
+            null;
+            
+        const prev = ((parseInt(page) <= totalPages) && (parseInt(page) > 1)) ?
+            `/api/v1/todos?userId=${userIdParam}&page=${parseInt(page) - 1}&count=${limit}&includeSubTodos=${isIncludeSubTodos}&sortBy=${sortBy}` :
+            null;
+        
+        let nextUrl = next, prevUrl = prev;
+        if (date) {
+            nextUrl = next ? next.concat(`&date=${date.toString().split('T')[0]}`) : null;
+            prevUrl = prev ? prev.concat(`&date=${date.toString().split('T')[0]}`) : null;
+        }
+
+        return {
+            todo: todoData,
+            meta: {
+                pagination: {
+                    currentPage: parseInt(page),
+                    links: {
+                        next: nextUrl,
+                        prev: prevUrl,
+                    },
+                    perPage: limit,
+                    total,
+                    totalPages,
+                },
+            },
+        };
+    }
 }
 
 module.exports = Todo;
