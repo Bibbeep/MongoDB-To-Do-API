@@ -1,10 +1,24 @@
 const Todo = require("../models/todo");
-const { validateCreateTodo, validateEditTodo } = require("../utils/validator");
+const { validateCreateTodo, validateEditTodo, validateGetTodoQuery, validateUserId } = require("../utils/validator");
 
 module.exports = {
 	getAllTodos: async (req, res, next) => {
 		try {
+			const { error, value } = validateGetTodoQuery(req.query);
 
+			if (error) {
+				throw error;
+			}
+
+			const data = await Todo.getAll({ userId: req.userId, value });
+
+			return res.status(200).json({
+				status: 'success',
+				message: data.todo.length !== 0 ?
+					'Successfully retrieved all user\'s tasks.' :
+					'No tasks found for the user.',
+				data,
+			});
 		} catch (err) {
 			next(err);
 		}

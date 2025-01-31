@@ -11,6 +11,7 @@ const { todoIdPathValidator } = require('../middlewares/pathParamsValidator');
 
 router.get(
 	'/todos',
+	verifyToken,
 	getAllTodos
 );
 
