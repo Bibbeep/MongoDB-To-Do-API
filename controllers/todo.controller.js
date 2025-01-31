@@ -11,7 +11,19 @@ module.exports = {
 	},
 	getTodoById: async (req, res, next) => {
 		try {
+			const todo = await Todo.getById({
+				userId: req.userId,
+				includeSubTodos: req.query.includeSubTodos,
+				todoId: req.params.id,
+			});
 
+			return res.status(200).json({
+				status: 'success',
+				message: 'Successfully retrieved a task.',
+				data: {
+					todo,
+				},
+			});
 		} catch (err) {
 			next(err);
 		}

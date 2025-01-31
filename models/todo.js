@@ -125,6 +125,48 @@ class Todo {
 
         return updatedTodo;
     }
+
+    static async getById(data) {
+        const {
+            userId,
+            includeSubTodos,
+            todoId,
+        } = data;
+
+        const isIncludeSubTodos = includeSubTodos ? (includeSubTodos === 'true') : true;
+        const projection = isIncludeSubTodos ? undefined : { subTodos: isIncludeSubTodos };
+
+        const db = await connectToDB();
+        const todo = await db.collection('todo').findOne(
+            { _id: ObjectId.createFromHexString(todoId) },
+            { projection },
+        );
+
+        if (!todo) {
+            throw new APIError(404, 'Todo does not exist!');
+        } else if (todo.userId.toString() !== userId) {
+            throw new APIError(403, 'Unauthorized! Cannot access other user\'s todo.');
+        }
+
+        const returnData = {
+            id: todo._id.toString(),
+            title: todo.title,
+            note: todo.note,
+            onDate: todo.onDate,
+            dueDate: todo.dueDate,
+            isDone: todo.isDone,
+            doneAt: todo.doneAt,
+            createdAt: todo.createdAt,
+            updatedAt: todo.updatedAt,
+            subTodos: todo.subTodos || null,
+        };
+
+        if (!returnData.subTodos) {
+            delete returnData.subTodos;
+        }
+
+        return returnData;
+    }
 }
 
 module.exports = Todo;

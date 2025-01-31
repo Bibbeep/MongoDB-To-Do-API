@@ -188,14 +188,14 @@ To get started with the MongoDB To-Do API, follow these steps:
     },
     "meta": {
       "pagination": {
-        "current_page": 2,
+        "currentPage": 2,
         "links": {
             "next": "/api/v1/todos?userId=64c77b5f9f1c4f4e8c7b92b1&page=3&count=10",
             "prev": "/api/v1/todos?userId=64c77b5f9f1c4f4e8c7b92b1&page=1&count=10"
         },
-        "per_page": 10,
+        "perPage": 10,
         "total": 31,
-        "total_pages": 4
+        "totalPages": 4
       }
     }
   }

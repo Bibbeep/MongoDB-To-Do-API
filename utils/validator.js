@@ -43,9 +43,14 @@ const editTodoSchema = Joi.object({
     })).optional(),
 }).min(1);
 
+const todoIdSchema = Joi.object({
+    id: Joi.string().hex().length(24).required(),
+});
+
 module.exports = {
     validateRegister: validator(registerSchema),
     validateLogin: validator(loginSchema),
     validateCreateTodo: validator(createTodoSchema),
     validateEditTodo: validator(editTodoSchema),
+    validateTodoId: validator(todoIdSchema),
 };
