@@ -1,5 +1,5 @@
 const Todo = require("../models/todo");
-const { validateCreateTodo } = require("../utils/validator");
+const { validateCreateTodo, validateEditTodo } = require("../utils/validator");
 
 module.exports = {
 	getAllTodos: async (req, res, next) => {
@@ -41,7 +41,27 @@ module.exports = {
 	},
 	editTodoById: async (req, res, next) => {
 		try {
+			const { error, value } = validateEditTodo(req.body);
 
+			if (error) {
+				throw error;
+			}
+
+			const todo = await Todo.update({
+				userId: req.userId,
+				value,
+				todoId: req.params.id,
+			});
+
+			return res.status(200).json({
+				status: 'success',
+				message: 'Successfully edited a task.',
+				data: {
+					todo: {
+						id: todo._id.toString(),
+					},
+				},
+			});
 		} catch (err) {
 			next(err);
 		}

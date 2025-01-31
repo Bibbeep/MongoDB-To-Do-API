@@ -9,14 +9,11 @@ const {
 const {
 	verifyToken,
 } = require("../middlewares/authentication");
-const {
-	authorizeUserIdQueryParam,
-} = require("../middlewares/authorization");
 
 router.get("/todos", getAllTodos);
 router.get("/todos/:id", getTodoById);
 router.post("/todos", verifyToken, createTodo);
-router.patch("/todos/:id", editTodoById);
+router.patch("/todos/:id", verifyToken, editTodoById);
 router.delete("/todos/:id", verifyToken, deleteTodoById);
 
 module.exports = router;
