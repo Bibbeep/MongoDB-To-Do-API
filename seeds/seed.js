@@ -2,6 +2,7 @@ require('dotenv').config();
 const { connectToDB } = require('../configs/mongodb');
 const { ObjectId } = require('mongodb');
 const todos = require('./todo.json');
+const bcrypt = require('bcrypt');
 
 const seedDatabase = async (data) => {
     try {
@@ -22,16 +23,39 @@ const seedDatabase = async (data) => {
         });
 
         const db = await connectToDB();
-        await db.collection('todo').insertMany(data);
-        return todos.length;
+        const todoResult = await db.collection('todo').insertMany(data);
+
+        const userResult = await db.collection('user').insertMany([
+            {
+                _id: ObjectId.createFromHexString('6798a893be24105219451bc9'),
+                fullName: 'Test User 1',
+                email: 'user1@test.com',
+                password: await bcrypt.hash('password123', 10),
+                createdAt: new Date(Date.now()),
+                updatedAt: new Date(Date.now()),
+            },
+            {
+                _id: ObjectId.createFromHexString('6798a893be24105219451bc1'),
+                fullName: 'Test User 2',
+                email: 'user2@test.com',
+                password: await bcrypt.hash('password123', 10),
+                createdAt: new Date(Date.now()),
+                updatedAt: new Date(Date.now()),
+            },
+        ]);
+
+        return {
+            todoLength: todoResult.insertedCount,
+            userLength: userResult.insertedCount, 
+        };
     } catch (err) {
         throw err;
     }
 };
 
 seedDatabase(todos)
-    .then((len) => {
-        console.log(`Successfully inserted ${len} documents.`);
+    .then((data) => {
+        console.log(`Successfully inserted ${data.todoLength + data.userLength} documents.`);
         process.exit(0);
     })
     .catch((err) => {
