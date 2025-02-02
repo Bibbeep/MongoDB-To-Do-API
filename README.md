@@ -7,6 +7,7 @@ A simple to-do list to help user organizes their tasks!
 ![Express.js v4.21.2](https://img.shields.io/badge/Express%20js-v4.21.2-000000?style=for-the-badge&logo=express&logoColor=white)
 ![MongoDB v8.0.4](https://img.shields.io/badge/MongoDB-v8.0.4-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
 ![Redis v7.4.1](https://img.shields.io/badge/Redis-v7.4.1-%23DD0031.svg?&style=for-the-badge&logo=redis&logoColor=white)
+![Docker v27.2.0](https://img.shields.io/badge/Docker-v27.2.0-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
 
 ### Getting Started
 
@@ -33,13 +34,46 @@ To get started with the MongoDB To-Do API, follow these steps:
     REDIS_URL=redis://localhost:6379
     ```
 
-4. **Run the application:**
+4. **Seed the database (optional):**
+    ```bash
+    npm run db:reset
+    npm run db:seed
+    ```
+
+5. **Run the application:**
     ```bash
     npm run dev
     ```
 
-5. **Access the API:**
+6. **Access the API:**
   You can now access the API at http://localhost:3000 . Open your browser or API client and navigate to the endpoints.
+
+### Running with Docker
+
+To set up and run the MongoDB To-Do API using Docker and Docker Compose, follow these steps:
+
+1. **Clone the repository:**
+    ```bash
+    git clone https://github.com/Bibbeep/MongoDB-To-Do-API.git
+    cd MongoDB-To-Do-API
+    ```
+
+2. **Create a `.env` file:**
+    Create a `.env` file in the root directory and add the following variables:
+    ```env
+    PORT=3000
+    MONGODB_URL="mongodb://root:password@mongo:27017"
+    REDIS_URL="redis://redis:6379"
+    JWT_SECRET=your_jwt_secret
+    ```
+
+3. **Build and run the containers:**
+    ```bash
+    docker-compose up --build
+    ```
+
+4. **Access the API:**
+    You can now access the API at http://localhost:3000 . Open your browser or API client and navigate to the endpoints.
 
 ### Features:
 
@@ -61,9 +95,9 @@ To get started with the MongoDB To-Do API, follow these steps:
 - `GET /api/v1/todos/:id`  - Retrieves a specified user's task
 - `POST /api/v1/todos`  - Adds a new task
 - `PATCH /api/v1/todos/:id`  - Edits a user's task
-- `DELETE /api/v1/todos/:id - Deletes a task`  - Deletes a user's task
+- `DELETE /api/v1/todos/:id` - Deletes a task  - Deletes a user's task
 
-### Response Examples:
+### Request & Response Examples:
 
 - `POST /api/v1/auth/register` - Registers a new user account
 
@@ -151,6 +185,14 @@ To get started with the MongoDB To-Do API, follow these steps:
   curl -X GET http://localhost:3000/api/v1/todos?userId=64c77b5f9f1c4f4e8c7b92b1&page=2&count=10&includeSubTodos=true \
     -H "Authorization: Bearer $JWT_TOKEN"
   ```
+
+  - Query Parameters:
+    - `userId` (required): The ID of the user whose tasks are to be retrieved.
+    - `page` (optional): The page number for pagination. Default is 1.
+    - `count` (optional): The number of tasks per page. Default is 10.
+    - `includeSubTodos` (optional): Whether to include sub-tasks in the response. Default is true.
+    - `date` (optional): Filter tasks by a specific date.
+    - `sortBy` (optional): Sort tasks by date. Use `-date` for descending order. Default is ascending order.
 
   - Response (200):
 
