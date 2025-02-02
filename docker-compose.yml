@@ -1,0 +1,41 @@
+services:
+  backend:
+    build: .
+    ports:
+      - "3000:3000"
+    networks:
+      - todo-app
+    depends_on:
+      - mongo
+      - redis
+
+  mongo:
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27017:27017"
+    networks:
+      - todo-app
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - mongo-data:/data/db
+
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - todo-app
+    volumes:
+      - redis-data:/data
+
+networks:
+  todo-app:
+    driver: bridge
+
+volumes:
+  mongo-data:
+  redis-data:
