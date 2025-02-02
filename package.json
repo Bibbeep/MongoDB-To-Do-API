@@ -4,7 +4,9 @@
   "description": "A simple to-do list to help user organizes their tasks!",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon ./app.js"
+    "dev": "nodemon ./app.js",
+    "db:seed": "node ./seeds/seed.js",
+    "db:reset": "node ./seeds/reset.js"
   },
   "keywords": [],
   "author": "",
